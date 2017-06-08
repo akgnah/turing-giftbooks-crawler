@@ -40,7 +40,7 @@ turing.py 是实际上的爬虫，你需要使用 Crontab 定时执行它，请�
 杂项
 ----
 
-如果你使用 Windows，没有 Crontab，你可以试试 `uCron <https://github.com/akganh/ucron/>`_ 并修改 app.py 创建一个 URL 以便访问 turing.py。
+如果你使用 Windows，没有 Crontab，你可以试试 `uCron <https://github.com/akgnah/ucron/>`_ 并修改 app.py 创建一个 URL 以便访问 turing.py。
 
 因为爬虫比较简单，所以没有注释，如果你有任何疑问欢迎 Email 联系我。在我的 Github 主页能找到我的邮箱地址。
 
