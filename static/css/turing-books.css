@@ -1,0 +1,22 @@
+.header {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+@media (min-width: 900px) {
+  .container {
+    max-width: 860px;
+  }
+}
+
+img {
+  width: 150px;
+  height: 200px
+}
+
+.book-info {
+  width: 166px;
+  padding: 8px;
+  margin: 0;
+  float:left;
+}

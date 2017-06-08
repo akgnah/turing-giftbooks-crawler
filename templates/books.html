@@ -1,0 +1,117 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="{% static '/img/favicon.png' %}" rel="shortcut icon">
+        <link href="{% static 'vendor/normalize.css' %}" rel="stylesheet">
+        <!-- Bootstrap core CSS -->
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <link href="{% static 'css/ie10-viewport-bug-workaround.css' %}" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="{% static 'css/jumbotron-narrow.css' %}" rel="stylesheet">
+	    <link href="{% static 'css/turing-books.css' %}" rel="stylesheet">
+        <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+        <!--[if lt IE 9]><script src="js/ie8-responsive-file-warning.js' %}"></script><![endif]-->
+        <script src="{% static 'js/ie-emulation-modes-warning.js' %}"></script>
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        <script src="{% static 'js/html5shiv.min.js' %}"></script>
+        <script src="{% static 'js/respond.min.js' %}"></script>
+        <![endif]-->
+        <script type="text/html" id="books-template">
+<div class="container">
+    <a href="https://github.com/turing-giftbooks-crawler" target="_blank">
+    <img style="position: absolute; top: 0; right: 0; border: 0;" 
+      src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" 
+      alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
+    <div class="header clearfix">
+        <nav>
+            <ul class="nav nav-tabs">
+                <% if (args.search) { %>
+                <li role="presentation"><a href="/books#">全部</a></li>
+                <% } %>
+                <li role="presentation" class="<%- args.date %>"><a href="#?page=<%- page %>&sort=date<%- args.search %>">最新</a></li>
+                <li role="presentation" class="<%- args.price %>"><a href="#?page=<%- page %>&sort=price<%- args.search %>">所需银子</a></li>
+                <form action="/api/books" method="get">
+			    <li role="presentation" class="pull-right"><button class="btn btn-primary" id="banner-btn-search">搜 索</button></li>
+			    <li role="presentation" class="pull-right"><input id="search-empty" type="text" name="q" placeholder="支持模糊搜索" class="form-control" value="<%- q %>"></li>
+                </form>
+            </ul>
+        </nav>
+    </div>
+    <div class="row marketing">
+    <% if (books !== null) { %>
+        <div>
+        <% if (books.length === 0) { %>
+        <h3>没有找到和 <%- q %> 相关的书呢</h3>
+        <% } %>
+        <% var loop = 0 %>
+        <% _.each(books.models, function (book) { %>
+            <% loop++; %>
+            <% if (loop % 5 === 1) { %>
+            <div class="">
+            <% } %>
+                <div class="book-info">
+                    <a href="http://www.ituring.com.cn/book/<%- book.get('id') %>" title="<%- book.get('title') %>" target="_blank"">
+                        <img class="lazy" data-original="http://file.ituring.com.cn/SmallCover/<%- book.get('img') %>" width="150" height="200" />
+                    </a><br />
+                    所需银子： <%- book.get('price') %> <br />
+                    出版日期： <%- book.get('date') %> <br />
+                </div>
+            <% if (loop % 5 === 0) { %>
+            </div>
+            <% } %>
+        <% }); %>
+            <% if (loop % 5 !== 0) { %>
+            </div>
+        <% } %>
+        </div>
+    </div>
+    <ul class="pagination">
+        <% if (page > 1) { %>
+        <li><a href="#?page=1&sort=<%- sort %><%- args.search %>">首页</a></li>
+        <li><a href="#?page=<%- page - 1 %>&sort=<%- sort %><%- args.search %>">上页</a></li>
+        <% } %>
+        <% if (page * 20 < books._total) { %>
+        <li><a href="#?page=<%- page + 1 %>&sort=<%- sort %><%- args.search %>">下页</a></li>
+        <li><a href="#?page=<%- books._end %>&sort=<%- sort %><%- args.search %>">末页</a></li>
+    <% } %>
+    </ul>
+    <% } else { %>
+    <h2>Loading...</h2>
+    <% } %>
+    <footer class="footer">
+        <p><a href="http://www.ituring.com.cn/space/95083" target="_blank">@home2</a></p>
+    </footer>
+</div>
+        </script>
+    </head>
+    <body>
+        <div id="content">
+        </div>
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+        <script src="{% static 'vendor/jquery.js' %}"></script>
+        <script src="{% static 'vendor/jquery.lazyload.js' %}"></script>
+        <script src="{% static 'vendor/underscore.js' %}"></script>
+        <script src="{% static 'vendor/backbone.js' %}"></script>
+        <script id="config" type="text/json">
+            {
+                "models": {},
+                "collections": {},
+                "views": {},
+                "router": null
+            }
+        </script>
+        <script src="{% static 'backbone/app.js' %}?v={{ time }}"></script>
+        <script src="{% static 'backbone/models.js' %}?v={{ time }}"></script>
+        <script src="{% static 'backbone/views.js' %}?v={{ time }}"></script>
+        <script src="{% static 'backbone/router.js' %}?v={{ time }}"></script>
+    </body>
+</html>
