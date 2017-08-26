@@ -9,14 +9,35 @@
   }
 }
 
-img {
-  width: 150px;
-  height: 200px
-}
-
 .book-info {
   width: 166px;
   padding: 8px;
   margin: 0;
   float:left;
+}
+
+.book-info img {
+  width: 150px;
+  height: 200px
+}
+
+.book-info .ebook {
+    font-size: 0;
+    /* display: inline-block; */
+    position: relative;
+}
+
+.book-info .ebook:after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    content: '有电子版';
+    color: #fff;
+    font: 15px/21px "Helvetica Neue", Arial;
+    font-weight: 200;
+    padding: 0 6px;
+    background: #000;
+    opacity: .6;
+    display: inline-block;
+    border-radius: 2px 0 0 0;
 }

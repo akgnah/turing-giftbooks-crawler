@@ -1,0 +1,66 @@
+<div class="container">
+    <a href="https://github.com/akgnah/turing-giftbooks-crawler" target="_blank">
+    <img style="position: absolute; top: 0; right: 0; border: 0;" src="/static/img/github-ribbon.png" 
+      alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
+    <div class="header clearfix">
+        <nav>
+            <ul class="nav nav-tabs">
+                <% if (args.search) { %>
+                <li role="presentation"><a href="/books#">全部</a></li>
+                <% } %>
+                <li role="presentation" class="<%- args.date %>"><a href="#?page=<%- page %>&sort=date<%- args.search %>">最新</a></li>
+                <li role="presentation" class="<%- args.price %>"><a href="#?page=<%- page %>&sort=price<%- args.search %>">所需银子</a></li>
+                <form action="/api/books" method="get">
+			    <li role="presentation" class="pull-right"><button class="btn btn-primary" id="banner-btn-search">搜 索</button></li>
+			    <li role="presentation" class="pull-right"><input id="search-empty" type="text" name="q" placeholder="支持模糊搜索" class="form-control" value="<%- q %>"></li>
+                </form>
+            </ul>
+        </nav>
+    </div>
+    <div class="row marketing">
+    <% if (books !== null) { %>
+        <div>
+        <% if (books.length === 0) { %>
+        <h3>没有找到和 <%- q %> 相关的书呢</h3>
+        <% } %>
+        <% var loop = 0 %>
+        <% _.each(books.models, function (book) { %>
+            <% loop++; %>
+            <% if (loop % 5 === 1) { %>
+            <div>
+            <% } %>
+                <div class="book-info">
+                    <a href="http://www.ituring.com.cn/book/<%- book.get('id') %>" title="<%- book.get('title') %>" target="_blank">
+                        <p class="<%- book.get('ebook') %>">
+                            <img class="lazy" data-original="http://file.ituring.com.cn/SmallCover/<%- book.get('img') %>" width="150" height="200" />
+                        </p>
+                    </a>
+                    所需银子： <%- book.get('price') %> <br />
+                    出版日期： <%- book.get('date') %> <br />
+                </div>
+            <% if (loop % 5 === 0) { %>
+            </div>
+            <% } %>
+        <% }); %>
+            <% if (loop % 5 !== 0) { %>
+            </div>
+        <% } %>
+        </div>
+    </div>
+    <ul class="pagination">
+        <% if (page > 1) { %>
+        <li><a href="#?page=1&sort=<%- sort %><%- args.search %>">首页</a></li>
+        <li><a href="#?page=<%- page - 1 %>&sort=<%- sort %><%- args.search %>">上页</a></li>
+        <% } %>
+        <% if (page * 20 < books._total) { %>
+        <li><a href="#?page=<%- page + 1 %>&sort=<%- sort %><%- args.search %>">下页</a></li>
+        <li><a href="#?page=<%- books._end %>&sort=<%- sort %><%- args.search %>">末页</a></li>
+    <% } %>
+    </ul>
+    <% } else { %>
+    <h2>Loading...</h2>
+    <% } %>
+    <footer class="footer">
+        <a target="_blank" href="http://www.ituring.com.cn/space/95083"><p>@home2</p></a>
+    </footer>
+</div>

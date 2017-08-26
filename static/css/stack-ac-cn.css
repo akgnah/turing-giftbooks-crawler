@@ -1,0 +1,19 @@
+.footer {
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.footer a {
+  display: inline-block;
+  text-decoration: none;
+  height: 20px;
+  line-height: 20px;
+}
+
+.footer p {
+  float: left;
+  height: 20px;
+  line-height: 20px;
+  margin: 0px 0px 0px 5px;
+  color: #939393;
+}

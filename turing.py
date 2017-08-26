@@ -9,7 +9,7 @@ from functools import reduce
 from bs4 import BeautifulSoup
 
 db = redis.Redis()
-proxy = False   # if you want to use proxy, change it True
+proxy = False  # if you want to use proxy, modify it.
 sleep_time = 0.5
 
 
@@ -45,13 +45,13 @@ def parse_book(book_id):
 
     title = bsobj.find('div', {'class': 'book-title'}).find('h2').get_text()
     img = bsobj.find('img', {'class': 'lazy'}).attrs['src'].split('/')[-1]
-    gift = bsobj.findAll('div', {'class': 'buy-btns'})[-1].find(lambda tag: 'addtogiftcart' in tag.attrs['href']) and True
-    price = bsobj.find('div', {'class': 'book-approaches'}).find('dt', text='纸质版定价')
-    price = int(float(price.findNextSibling().get_text()[1:])) if price else 0
+    gift = bool(bsobj.findAll('div', {'class': 'buy-btns'})[-1].find(lambda tag: 'addtogiftcart' in tag.attrs['href']))
+    price = bsobj.find('div', {'class': 'book-approaches'}).findAll('s')
+    price = int(float(price[-1].get_text()[1:])) if price else 0
     date = bsobj.find('ul', {'class': 'publish-info'}).find('strong', text='出版日期')
     date = date.findParent().contents[1] if date else '1970-01-01'
-
-    dump_books({'id': book_id, 'title': title, 'gift': gift, 'img': img, 'price': price, 'date': date})
+    ebook = 'ebook' if bsobj.find('dl', {'class': 'ebook-formats'}) else 'no-ebook'
+    dump_books({'id': book_id, 'title': title, 'gift': gift, 'img': img, 'price': price, 'date': date, 'ebook': ebook})
     print('dump', book_id)
     time.sleep(sleep_time)
 
@@ -136,7 +136,7 @@ def search(text, page=0, count=20, sort='date'):
         tmp.append(set())
 
     books = {_id: books.get(_id) for _id in reduce(lambda a, b: a & b, tmp)}
-    gift_books = [book for book in books.values() if book['gift']]  # filter books, because update_index don't auto clean invalid indexes.
+    gift_books = [book for book in books.values() if book['gift']]
     sort_books = sorted(gift_books, key=lambda x: x[sort], reverse=True)
     return sort_books[page * count: page * count + count], len(sort_books)
 

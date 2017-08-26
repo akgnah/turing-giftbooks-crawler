@@ -3,15 +3,19 @@
     var TemplateView = Backbone.View.extend({
         templateName: '',
         initialize: function () {
-            this.template = _.template($(this.templateName).html());
+            this.templateFile = '/static/apps/views/' + this.templateName + '?v=' + app.version;
         },
         render: function () {
-            var context = this.getContext(),
-            html = this.template(context);
-            this.changeTitle();
-            this.$el.html(html);
-            $('img.lazy').lazyload();
-            $('body').animate({scrollTop: 0}, 500);
+            var that = this;
+            $.get(this.templateFile, function (data) {
+                this.template = _.template(data);
+                var context = that.getContext(),
+                html = this.template(context);
+                that.changeTitle();
+                that.$el.html(html);  
+                $('img.lazy').lazyload();
+                $('body').animate({scrollTop: 0}, 500);
+            }, 'html');
         },
         getContext: function () {
             return {}
@@ -35,7 +39,7 @@
     });
 
     var BooksView = FormView.extend({
-        templateName: '#books-template',
+        templateName: 'books.html',
         initialize: function (options) {
             var self = this;
             this.query = {
@@ -58,7 +62,7 @@
                     search: this.query.q !== null? '&q=' + this.query.q: ''
                 }
             };
-            $.extend(context, this.query)
+            $.extend(context, this.query);
             return context;
         },
         submit: function (event) {
